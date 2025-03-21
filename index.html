@@ -1,1 +1,213 @@
-https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Terminalicon2.png/768px-Terminalicon2.png
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyTerminal</title>
+    <link rel="stylesheet" href="../HTML/styles.css">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Terminalicon2.png/768px-Terminalicon2.png" type="image/png">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="data:application/json,{"name":"MyTerminal","short_name":"MyTerminal","description":"A simulated terminal experience.","start_url":"./index.html","display":"standalone","background_color":"#000000","theme_color":"#000000","icons":[{"src":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Terminalicon2.png/768px-Terminalicon2.png","sizes":"192x192","type":"image/png"},{"src":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Terminalicon2.png/768px-Terminalicon2.png","sizes":"512x512","type":"image/png"}]}">
+</head>
+<body>
+    <div id="terminal" class="terminal">
+        <div id="output" class="terminal-output">
+            <div>Welcome to MyTerminal</div>
+            <div>Created by @_bielcastillo</div>
+            <div>Type <strong>help</strong> to see the list of available commands.</div>
+        </div>
+        <div class="terminal-input">
+            <span id="prompt" class="prompt">root@myterminal:~#</span>
+            <input type="text" id="commandInput" autocomplete="off" autofocus />
+        </div>
+    </div>
+    <script>
+        // Service Worker
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("./service-worker.js").then(() => {
+                console.log("Service Worker registered successfully.");
+            }).catch((error) => {
+                console.error("Service Worker registration failed:", error);
+            });
+        }
+
+        // Service Worker Script
+        const CACHE_NAME = "myterminal-cache-v1";
+        const urlsToCache = [
+            "./index.html",
+            "./styles.css",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Terminalicon2.png/768px-Terminalicon2.png"
+        ];
+
+        self.addEventListener("install", (event) => {
+            event.waitUntil(
+                caches.open(CACHE_NAME).then((cache) => {
+                    return cache.addAll(urlsToCache);
+                })
+            );
+        });
+
+        self.addEventListener("fetch", (event) => {
+            event.respondWith(
+                caches.match(event.request).then((response) => {
+                    return response || fetch(event.request);
+                })
+            );
+        });
+
+        // Terminal Functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const output = document.querySelector('#output');
+            const commandInput = document.querySelector('#commandInput');
+            const prompt = 'root@myterminal:~#';
+
+            // Change text color dynamically while typing
+            commandInput.addEventListener('input', () => {
+                const length = commandInput.value.length;
+                if (length % 3 === 0) {
+                    commandInput.style.color = '#ff0000'; // Red
+                } else if (length % 3 === 1) {
+                    commandInput.style.color = '#00ff00'; // Green
+                } else {
+                    commandInput.style.color = '#0000ff'; // Blue
+                }
+            });
+
+            // Initial welcome message
+            function showWelcomeMessage() {
+                logToTerminal('Welcome to MyTerminal');
+                logToTerminal('Created by @_bielcastillo');
+                logToTerminal('Type "help" to see the list of available commands.');
+            }
+
+            const commands = {
+                help: () => {
+                    return `Available commands:
+- help: Displays this list of commands.
+- clear: Clears the terminal.
+- echo [text]: Displays the entered text.
+- date: Displays the current date and time.
+- whoami: Displays the current user.
+- ls: Lists files and directories.
+- pwd: Displays the current directory.
+- cd [directory]: Changes the directory (simulated).
+- mkdir [name]: Creates a directory (simulated).
+- rm [file/directory]: Deletes a file or directory (simulated).
+- touch [file]: Creates an empty file (simulated).
+- cat [file]: Displays the content of a file (simulated).
+- sudo [command]: Simulates the use of sudo.
+- hydra [options]: Simulates a brute force attack.
+- scan [ip/domain]: Simulates a port scan.
+- subdomains [domain]: Simulates subdomain enumeration.
+- git [command]: Simulates basic Git commands.
+- uname: Displays system information.
+- ifconfig: Displays network configuration (simulated).
+- ping [host]: Simulates a ping to a host.
+- curl [url]: Simulates an HTTP request.
+- wget [url]: Simulates downloading a file.
+- man [command]: Displays the manual for a command (simulated).
+- df: Displays disk usage.
+- free: Displays memory usage.
+- ps: Lists running processes.
+- kill [pid]: Simulates terminating a process.
+- top: Displays running processes (simulated).
+- history: Displays the command history.
+- chmod [permissions] [file]: Changes file permissions (simulated).
+- chown [user] [file]: Changes file ownership (simulated).
+- locate [file]: Simulates searching for a file.
+- find [path] [options]: Simulates searching for files.
+- grep [pattern] [file]: Simulates searching for text in a file.
+- tar [options] [file]: Simulates compressing or extracting files.
+- zip [file]: Simulates compressing a file.
+- unzip [file]: Simulates extracting a file.
+- ssh [user@host]: Simulates an SSH connection.
+- exit: Closes the terminal (simulated).`;
+                },
+                clear: () => {
+                    output.innerHTML = '';
+                    return '';
+                },
+                echo: (args) => {
+                    return args.join(' ');
+                },
+                date: () => {
+                    return new Date().toString();
+                },
+                whoami: () => {
+                    return 'root';
+                },
+                ls: () => {
+                    return 'file1.txt  file2.txt  directory1/';
+                },
+                pwd: () => {
+                    return '/root';
+                },
+                cd: (args) => {
+                    if (!args[0]) return 'Error: You must specify a directory.';
+                    return `Changing to directory: ${args[0]}`;
+                },
+                mkdir: (args) => {
+                    if (!args[0]) return 'Error: You must specify a name for the directory.';
+                    return `Directory created: ${args[0]}`;
+                },
+                rm: (args) => {
+                    if (!args[0]) return 'Error: You must specify a file or directory to delete.';
+                    return `Deleted: ${args[0]}`;
+                },
+                touch: (args) => {
+                    if (!args[0]) return 'Error: You must specify a name for the file.';
+                    return `File created: ${args[0]}`;
+                },
+                cat: (args) => {
+                    if (!args[0]) return 'Error: You must specify a file.';
+                    return `Content of ${args[0]}:\nThis is a sample file.`;
+                },
+                sudo: (args) => {
+                    if (!args[0]) return 'Error: You must specify a command to run with sudo.';
+                    return `Running as root: ${args.join(' ')}`;
+                },
+                hydra: (args) => {
+                    return `Simulating brute force attack with Hydra...\nOptions: ${args.join(' ')}`;
+                },
+                scan: (args) => {
+                    if (!args[0]) return 'Error: You must specify an IP or domain.';
+                    return `Scanning open ports on ${args[0]}...\nOpen ports: 22, 80, 443`;
+                },
+                subdomains: (args) => {
+                    if (!args[0]) return 'Error: You must specify a domain.';
+                    return `Searching for subdomains of ${args[0]}...\nFound subdomains: www.${args[0]}, mail.${args[0]}, blog.${args[0]}`;
+                },
+                exit: () => {
+                    return 'Closing the terminal...';
+                },
+            };
+
+            function logToTerminal(message) {
+                const line = document.createElement('div');
+                line.textContent = message;
+                output.appendChild(line);
+                output.scrollTop = output.scrollHeight; // Auto-scroll
+            }
+
+            // Show welcome message on load
+            showWelcomeMessage();
+
+            commandInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const input = commandInput.value.trim();
+                    logToTerminal(`${prompt} ${input}`);
+                    commandInput.value = '';
+
+                    const [command, ...args] = input.split(' ');
+                    if (commands[command]) {
+                        const result = commands[command](args);
+                        if (result) logToTerminal(result);
+                    } else {
+                        logToTerminal(`Command not found: ${command}`);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
