@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini-App Telegram</title>
+
+    <!-- Script de Monetag -->
+    <script src='//whephiwums.com/sdk.js' data-zone='9154536' data-sdk='show_9154536'></script>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Bienvenido a la mini-app!</h1>
+        <button id="rewardedButton">Mostrar Anuncio Recompensado</button>
+        <button id="popupButton">Mostrar Anuncio Popup</button>
+        <button id="inAppButton">Mostrar Anuncio Intersticial en la App</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Mostrar anuncio recompensado (Rewarded Interstitial)
+        document.getElementById('rewardedButton').addEventListener('click', function() {
+            show_9154536().then(() => {
+                // Función de recompensa después de ver el anuncio
+                alert('¡Has visto un anuncio y has sido recompensado!');
+            }).catch(e => {
+                alert('Hubo un error al mostrar el anuncio.');
+            });
+        });
+
+        // Mostrar anuncio popup (Rewarded Popup)
+        document.getElementById('popupButton').addEventListener('click', function() {
+            show_9154536('pop').then(() => {
+                // Función de recompensa después de ver el anuncio popup
+                alert('¡Has visto un anuncio popup!');
+            }).catch(e => {
+                alert('Hubo un error al mostrar el popup.');
+            });
+        });
+
+        // Mostrar anuncio intersticial dentro de la app (In-App Interstitial)
+        document.getElementById('inAppButton').addEventListener('click', function() {
+            show_9154536({ 
+                type: 'inApp', 
+                inAppSettings: { 
+                    frequency: 2, 
+                    capping: 0.1, 
+                    interval: 30, 
+                    timeout: 5, 
+                    everyPage: false 
+                } 
+            }).then(() => {
+                // Función cuando el anuncio intersticial se muestra
+                alert('¡Anuncio intersticial mostrado dentro de la app!');
+            }).catch(e => {
+                alert('Hubo un error al mostrar el anuncio intersticial.');
+            });
+        });
+    </script>
+</body>
+</html>
