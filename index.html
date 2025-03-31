@@ -6,25 +6,31 @@
     <title>Mini-App Telegram</title>
 
     <!-- Script de Monetag -->
-    <script src='//whephiwums.com/sdk.js' data-zone='9154536' data-sdk='show_9154536'></script>
+    <script src="https://whephiwums.com/sdk.js" data-zone="9154536" data-sdk="show_9154536"></script>
 </head>
 <body>
     <script>
-        // Selección aleatoria entre un anuncio recompensado o un popup
-        const randomChoice = Math.random() < 0.5 ? 'pop' : '';
-
-        // Mostrar anuncio aleatorio al cargar la página
-        if (randomChoice === 'pop') {
-            // Mostrar anuncio popup
-            show_9154536('pop').catch(e => {
-                console.error('Hubo un error al mostrar el popup.');
-            });
-        } else {
-            // Mostrar anuncio recompensado
-            show_9154536().catch(e => {
-                console.error('Hubo un error al mostrar el anuncio recompensado.');
-            });
-        }
+        // Asegúrate de que el SDK se haya cargado correctamente
+        window.onload = function() {
+            console.log("SDK Monetag cargado correctamente.");
+            
+            // Selección aleatoria entre un anuncio recompensado o un popup
+            const randomChoice = Math.random() < 0.5 ? 'pop' : '';
+            console.log(`Seleccionado el tipo de anuncio: ${randomChoice === 'pop' ? 'Popup' : 'Recompensado'}`);
+            
+            // Mostrar el anuncio aleatorio
+            if (randomChoice === 'pop') {
+                console.log("Mostrando anuncio Popup...");
+                show_9154536('pop').catch(e => {
+                    console.error('Hubo un error al mostrar el popup:', e);
+                });
+            } else {
+                console.log("Mostrando anuncio Recompensado...");
+                show_9154536().catch(e => {
+                    console.error('Hubo un error al mostrar el anuncio recompensado:', e);
+                });
+            }
+        };
     </script>
 </body>
 </html>
