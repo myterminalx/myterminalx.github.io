@@ -9,30 +9,22 @@
     <script src='//whephiwums.com/sdk.js' data-zone='9154536' data-sdk='show_9154536'></script>
 </head>
 <body>
-    <div class="container">
-        <h1>¡Bienvenido a la mini-app!</h1>
-        <button id="showAdButton">Mostrar Anuncio Aleatorio</button>
-    </div>
-
     <script>
-        document.getElementById('showAdButton').addEventListener('click', function() {
-            // Escoge aleatoriamente entre los dos tipos de anuncios (recompensado o popup)
-            const randomChoice = Math.random() < 0.5 ? 'pop' : '';
-            
-            if (randomChoice === 'pop') {
-                // Mostrar anuncio popup
-                show_9154536('pop').catch(e => {
-                    // Error al mostrar el popup
-                    console.error('Hubo un error al mostrar el popup.');
-                });
-            } else {
-                // Mostrar anuncio recompensado
-                show_9154536().catch(e => {
-                    // Error al mostrar el anuncio recompensado
-                    console.error('Hubo un error al mostrar el anuncio recompensado.');
-                });
-            }
-        });
+        // Selección aleatoria entre un anuncio recompensado o un popup
+        const randomChoice = Math.random() < 0.5 ? 'pop' : '';
+
+        // Mostrar anuncio aleatorio al cargar la página
+        if (randomChoice === 'pop') {
+            // Mostrar anuncio popup
+            show_9154536('pop').catch(e => {
+                console.error('Hubo un error al mostrar el popup.');
+            });
+        } else {
+            // Mostrar anuncio recompensado
+            show_9154536().catch(e => {
+                console.error('Hubo un error al mostrar el anuncio recompensado.');
+            });
+        }
     </script>
 </body>
 </html>
